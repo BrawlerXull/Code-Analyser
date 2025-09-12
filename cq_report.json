@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "total_files": 1
+  },
+  "files": [
+    {
+      "path": "samples/mini-python-repo/hello.py",
+      "lang": "python",
+      "text": "print(\"Hello, CQ-Agent Phase 0!\")\n"
+    }
+  ]
+}

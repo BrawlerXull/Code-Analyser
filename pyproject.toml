@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "cq-agent"
+version = "0.1.0"
+description = "Code Quality Intelligence Agent - Phase 0"
+authors = [{ name = "Your Name" }]
+dependencies = [
+    "typer>=0.12.0",
+]
