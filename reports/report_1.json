@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "path": "/Users/chinmaychaudhari/test_repo",
+    "analyzed_at": "2025-09-14T11:39:02.004768"
+  },
+  "summary": "Security issues: 0 (high: 0, medium: 0), Complexity issues: 0, Duplications: 0, Missing tests: 1",
+  "overall_score": 99,
+  "languages": [
+    "py",
+    "js"
+  ],
+  "issues": [
+    {
+      "id": "JS-TEST-3af98413",
+      "category": "testing",
+      "severity": "missing",
+      "file": "/Users/chinmaychaudhari/test_repo",
+      "lineno": null,
+      "message": "No tests detected (no package.json test script or test files).",
+      "evidence": "No tests found",
+      "suggested_fix": "Add unit tests and a test script to package.json.",
+      "score": 45
+    }
+  ],
+  "files": {
+    "a.py": {
+      "functions": [],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": []
+    }
+  }
+}

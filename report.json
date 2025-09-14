@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "total_files": 1,
+    "issues": 1,
+    "severity": "LOW"
+  },
+  "results": [
+    {
+      "path": "samples/mini-python-repo/hello.py",
+      "lang": "python",
+      "analysis": [
+        {
+          "analyzer": "PythonComplexityAnalyzer",
+          "functions": 0,
+          "classes": 0,
+          "complexity": 0
+        }
+      ]
+    }
+  ]
+}

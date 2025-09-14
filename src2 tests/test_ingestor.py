@@ -1,5 +1,6 @@
 from pathlib import Path
 from cq_agent.ingestion.fs_ingestor import FSIngestor
+from cq_agent.ingestion.fs_ingestor import FSIngestor
 
 
 def test_collect_files(tmp_path: Path):
