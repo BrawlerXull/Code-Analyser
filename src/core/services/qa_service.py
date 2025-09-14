@@ -30,7 +30,8 @@ from config.llm_config import load_llm_config
 # Optional Gemini Agent
 try:
     from core.agent.agent_controller import AgentController
-except Exception:
+except Exception as e:
+    print("Failed to import AgentController:", e)
     AgentController = None
 
 
@@ -50,16 +51,21 @@ def answer_question(report: Dict[str, Any], question: str) -> Dict[str, Any]:
     """
     # Load LLM/Gemini config
     cfg = load_llm_config()
+    
+    
+    
 
     # Use AgentController if available and LLM enabled
     if cfg.use_llm and AgentController is not None:
         try:
             agent = AgentController(cfg)  # Gemini API usage internally
+            
             # Attempt to map question to issue
             issue_id_match = re.search(r"(py|js)-\w+-\d+", question, flags=re.I)
             if issue_id_match:
                 issue_id = issue_id_match.group(0).upper()
                 resp = agent.explain_issue(report, issue_id)
+                
             else:
                 # Generic QA via agent.ask() with RAG+Gemini API
                 resp = agent.ask(report, question)

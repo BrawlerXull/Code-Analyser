@@ -25,8 +25,22 @@ from typing import Dict, Any, List, Optional
 
 from config.llm_config import load_llm_config
 from core.rag.retriever import retrieve, VectorStore, build_corpus_from_repo, index_repo
-from core.services.qa_service import answer_question
 
+import os
+print(os.getenv("GEMINI_API_KEY"))
+
+import re
+import json
+
+def _parse_llm_json(text: str) -> dict:
+    # Extract {...} block from response text
+    match = re.search(r"\{.*\}", text, flags=re.DOTALL)
+    if not match:
+        return {}
+    try:
+        return json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return {}
 
 
 class AgentController:
@@ -51,6 +65,7 @@ class AgentController:
             self.vector_store = VectorStore(index_path=index_path)
 
     def explain_issue(self, report: Dict, issue_id: str) -> Dict:
+        
         """
         Explain a specific issue using Gemini LLM and relevant code context.
 
@@ -95,6 +110,7 @@ Respond in JSON: {{"explanation": "...", "fix_plan": ["step 1", "step 2"]}}
 """
 
         # Call LLM or fallback
+        
         if self.use_llm:
             try:
                 llm_resp = self._call_llm(prompt)
@@ -154,6 +170,7 @@ File: {issue.get('file')} Line: {issue.get('lineno')}
             return {"issue_id": issue_id, "suggested_patch": f"Manually fix {issue.get('file')} line {issue.get('lineno')}", "confidence": "medium"}
 
     def _call_llm(self, prompt: str) -> str:
+
         """
         Internal LLM call helper using Gemini (Google Generative AI).
 
@@ -170,10 +187,12 @@ File: {issue.get('file')} Line: {issue.get('lineno')}
             raise RuntimeError("LLM usage is disabled in configuration.")
 
         if getattr(self.config, "provider", "").lower() == "gemini":
+            
 
             # Initialize Gemini client (reads GEMINI_API_KEY from env)
-            import google.generativeai as gemini
+            from google import genai as gemini
             client = gemini.Client()
+            print("oh")
 
             model_name = getattr(self.config, "llm_model", "gemini-2.5-flash")
 
@@ -182,6 +201,7 @@ File: {issue.get('file')} Line: {issue.get('lineno')}
                     model=model_name,
                     contents=prompt
                 )
+                
                 # The text is in response.text
                 return response.text
             except Exception as e:
@@ -189,3 +209,57 @@ File: {issue.get('file')} Line: {issue.get('lineno')}
 
         else:
             raise RuntimeError(f"LLM provider {self.config.provider} not supported.")
+        
+    def ask(self, report: Dict[str, Any], question: str) -> Dict[str, Any]:
+        """
+        Generic question-answering over a report using LLM.
+
+        Args:
+            report: Dict containing report data (issues, summary, etc.)
+            question: Natural-language question
+
+        Returns:
+            dict with keys: "answer", "sources", "confidence"
+        """
+        sources: List[str] = []
+
+        # Collect context from report issues (top 5)
+        context_text = ""
+        for issue in report.get("issues", [])[:5]:
+            context_text += f"- {issue.get('id')}: {issue.get('message')} (File: {issue.get('file')})\n"
+            sources.append(issue.get("file", "?"))
+
+        prompt = f"""
+    You are a code quality assistant. Answer the following question based on the report:
+
+    Report Summary: {report.get("summary", "")}
+    Issues:
+    {context_text}
+
+    Question: {question}
+
+    Respond in JSON with keys: {{ "answer": "...", "sources": [...], "confidence": "low|medium|high" }}
+    """
+
+        if self.use_llm:
+            try:
+                llm_resp = self._call_llm(prompt)
+                print("yes")
+                parsed = _parse_llm_json(llm_resp)
+                print("parsed")
+                # Ensure keys exist
+                return {
+                    "answer": parsed.get("answer", "No answer generated."),
+                    "sources": parsed.get("sources", sources),
+                    "confidence": parsed.get("confidence", "medium")
+                }
+            except Exception:
+                return {"answer": "LLM call failed.", "sources": sources, "confidence": "medium"}
+        else:
+            # Fallback: simple text summary
+            return {
+                "answer": f"Report summary: {report.get('summary', '')}",
+                "sources": sources,
+                "confidence": "medium"
+            }
+
