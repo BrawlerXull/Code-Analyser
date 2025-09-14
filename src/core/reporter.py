@@ -73,8 +73,11 @@ def generate_report(analysis: Dict[str, Any], config: Any = None) -> Dict[str, A
     # Compute overall score
     overall_score = compute_overall_score(issues, repo_size=len(analysis.get("files", {})))
 
+    print(AgentController)
+    print(config)
+
     # Optionally call LLM Agent for top issues
-    if AgentController is not None and getattr(config, "use_llm", False):
+    if AgentController is not None :
         try:
             agent = AgentController()
             top_issues = sorted(issues, key=lambda x: x["score"], reverse=True)[:3]
@@ -82,6 +85,7 @@ def generate_report(analysis: Dict[str, Any], config: Any = None) -> Dict[str, A
                 issue_id = issue["id"]
                 try:
                     explanation = agent.explain_issue(analysis, issue_id)
+                    print(explanation)
                     issue["llm_explanation"] = explanation
                 except Exception:
                     issue["llm_explanation"] = f"Top issue {issue_id}: {issue['message']}"

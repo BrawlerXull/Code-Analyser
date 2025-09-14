@@ -121,6 +121,9 @@ def analyze(
             return 0
 
         # Synchronous analysis
+        from core.reporter import generate_report
+
+        # Synchronous analysis
         logger.info(f"Analyzing repository at {repo_path} for languages: {languages_list}")
         analysis = analyze_repo(
             str(repo_path),
@@ -128,29 +131,36 @@ def analyze(
             index_for_rag=index_for_rag
         )
 
-        logger.info("Saving report to database...")
-        report_id: int = save_report(analysis)
+        # Generate canonical report
+        report = generate_report(analysis, config=config)
 
-        # Decide output directory
+        logger.info("Saving report to database...")
+        report_id: int = save_report(report)
+
+        # Write report JSON
         if out:
             out_dir = Path(out).resolve()
         else:
             out_dir = Path("./reports").resolve()
-
         out_dir.mkdir(parents=True, exist_ok=True)
         out_file = out_dir / f"report_{report_id}.json"
 
         with out_file.open("w", encoding="utf-8") as f:
-            json.dump(analysis, f, indent=2)
+            json.dump(report, f, indent=2)
+
+        md_file = out_dir / f"report_{report_id}.md"
+        with md_file.open("w", encoding="utf-8") as f:
+            f.write(report["markdown"])
+
 
         summary = {
             "report_id": report_id,
-            "summary": analysis.get("summary"),
-            "overall_score": analysis.get("overall_score"),
+            "summary": report.get("summary"),
+            "overall_score": report.get("overall_score"),
             "llm_enabled": use_llm
         }
         click.echo(json.dumps(summary, indent=2))
-        return 0
+
 
     except click.ClickException:
         raise

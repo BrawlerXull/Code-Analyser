@@ -1,102 +1,140 @@
 {
   "meta": {
     "path": "/Users/chinmaychaudhari/Desktop/Recusion/shortGen",
-    "analyzed_at": "2025-09-14T12:18:07.225054"
+    "analyzed_at": "2025-09-14T17:19:32.498269"
   },
-  "summary": "Security issues: 2 (high: 2, medium: 0), Complexity issues: 5, Duplications: 0, Missing tests: 1",
+  "summary": "Analyzed at 2025-09-14T17:19:32.498269. Found 8 issues across 19 files. Overall score: 85/100.",
   "overall_score": 85,
-  "languages": [
-    "py",
-    "js"
-  ],
   "issues": [
     {
       "id": "PY-CPLX-5ed12b5b9a59",
       "category": "complexity",
       "severity": "high",
+      "score": 80,
       "file": "core/video_processor.py",
       "lineno": 22,
       "message": "Function 'process_video' has high complexity (cc=33).",
-      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
       "suggested_fix": "Refactor function to reduce complexity.",
-      "score": 80
+      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
+      "llm_explanation": {
+        "issue_id": "PY-CPLX-5ed12b5b9a59",
+        "explanation": "The `process_video` function has a very high cyclomatic complexity (33). This indicates that the function is likely performing too many distinct operations, has deeply nested conditional logic, or is handling too many responsibilities. High complexity makes the code difficult to understand, test, maintain, and significantly increases the likelihood of bugs.",
+        "fix_plan": [
+          "**Analyze and Decompose:** Carefully review the `process_video` function to identify distinct logical blocks, responsibilities, or phases (e.g., input validation, video loading, frame processing, audio extraction, metadata handling, output generation, error handling).",
+          "**Extract Helper Functions:** For each identified logical block or responsibility, create a new, well-named private helper function (e.g., `_validate_inputs`, `_load_video_metadata`, `_process_frames`, `_extract_audio_track`, `_generate_output_file`).",
+          "**Simplify Conditional Logic:** If there are long `if/elif/else` chains or deeply nested conditions, explore ways to simplify them, possibly by using early returns, polymorphism, a strategy pattern, or a lookup table where appropriate.",
+          "**Orchestrate in `process_video`:** Refactor the original `process_video` function to act as a high-level orchestrator. It should primarily call the newly created helper functions in the correct sequence, passing necessary data between them, thereby drastically reducing its own complexity.",
+          "**Pass Data Explicitly:** Ensure that helper functions receive only the data they need as arguments, promoting clearer dependencies and reusability.",
+          "**Add or Update Tests:** Write new unit tests for the extracted helper functions and update existing tests for the refactored `process_video` function to ensure all logic remains correct and no regressions are introduced.",
+          "**Re-evaluate Complexity:** After refactoring, re-run the complexity analysis tool to verify that the cyclomatic complexity of `process_video` and its helper functions has been significantly reduced, ideally to a more manageable level (e.g., below 10-15)."
+        ],
+        "sources": [],
+        "confidence": "high"
+      }
     },
     {
       "id": "PY-SEC-2b0791f96540",
       "category": "security",
       "severity": "high",
+      "score": 80,
       "file": "features/scene_intensity.py",
       "lineno": 12,
       "message": "Use of dangerous function 'eval'.",
-      "evidence": "model.eval()",
       "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
-      "score": 80
+      "evidence": "model.eval()",
+      "llm_explanation": {
+        "issue_id": "PY-SEC-2b0791f96540",
+        "explanation": "The `eval()` function executes a string as a Python expression, making it a high-security risk. If an attacker can control the input string to `eval()`, they can execute arbitrary code on the system, leading to severe vulnerabilities like data theft, unauthorized access, or system compromise.",
+        "fix_plan": [
+          "Identify the specific purpose for which `eval()` is being used. This usually involves parsing data structures, evaluating mathematical expressions, or dynamically calling functions/methods.",
+          "Replace `eval()` with a safer, purpose-built function:\n    - If evaluating Python literal structures (like dictionaries, lists, strings, numbers, booleans, None), use `ast.literal_eval()` from the `ast` module. This is much safer as it only evaluates literals and not arbitrary code.\n    - If parsing JSON strings, use `json.loads()`.\n    - If dynamically calling functions or methods, use `getattr()` or a dictionary mapping string names to callable objects.\n    - If evaluating mathematical expressions, consider a dedicated math expression parser library if `ast.literal_eval` isn't sufficient for the required complexity.",
+          "If no direct replacement fits the exact functionality, reconsider the design to achieve the desired outcome without resorting to executing arbitrary code. Prioritize a more structured and explicit approach.",
+          "Ensure all input, especially user-controlled input, is rigorously validated and sanitized to prevent injection attacks, even after replacing `eval()` with a safer alternative."
+        ],
+        "sources": [],
+        "confidence": "high"
+      }
     },
     {
       "id": "PY-CPLX-b8efa0537e7c",
       "category": "complexity",
       "severity": "high",
+      "score": 80,
       "file": "utils/process_video_and_score.py",
       "lineno": 115,
       "message": "Function 'process_video' has high complexity (cc=33).",
-      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
       "suggested_fix": "Refactor function to reduce complexity.",
-      "score": 80
+      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
+      "llm_explanation": {
+        "issue_id": "PY-CPLX-b8efa0537e7c",
+        "explanation": "The 'process_video' function has a cyclomatic complexity of 33, which is very high. This indicates an excessive number of decision points (if/else statements, loops, try/except blocks, logical operators) and distinct execution paths, making the function difficult to understand, test, debug, and maintain. High complexity often suggests the function is performing too many responsibilities.",
+        "fix_plan": [
+          "**Analyze and Decompose:** Carefully review the entire 'process_video' function to identify its distinct responsibilities and logical blocks. Look for sections related to video loading, frame processing, feature extraction, data aggregation, scoring logic, error handling, and result saving.",
+          "**Extract Sub-Functions for Core Logic:** Create new, smaller, well-named functions for each of the identified responsibilities. For example, you might extract functions like `load_video_frames()`, `analyze_frame_for_features()`, `calculate_score_from_features()`, `save_processing_results()`, `handle_video_error()`, etc.",
+          "**Refactor Loop and Conditional Logic:** If there are complex nested loops or long `if/elif/else` chains, try to simplify them. Consider using lookup tables, polymorphism, or early returns where appropriate to reduce nesting and decision points.",
+          "**Isolate Error Handling:** Move specific error handling logic into dedicated helper functions or classes, especially if it's repeated or complex.",
+          "**Orchestrate in 'process_video':** After extracting, the original 'process_video' function should act as an orchestrator, calling these new, smaller functions in sequence. Its primary role should become managing the flow, not implementing all the details.",
+          "**Iterate and Measure:** After initial refactoring, re-evaluate the complexity of 'process_video' and the newly created functions. Continue breaking down functions until each achieves a manageable complexity (ideally below 10, often below 5 for simpler operations).",
+          "**Add Unit Tests:** Write unit tests for the newly created, smaller functions. This becomes significantly easier with lower complexity and helps ensure correctness during refactoring."
+        ],
+        "sources": [],
+        "confidence": "high"
+      }
     },
     {
       "id": "PY-SEC-70ee9d6690bf",
       "category": "security",
       "severity": "high",
+      "score": 80,
       "file": "utils/scene_intensity.py",
       "lineno": 12,
       "message": "Use of dangerous function 'eval'.",
-      "evidence": "model.eval()",
       "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
-      "score": 80
+      "evidence": "model.eval()"
     },
     {
       "id": "PY-CPLX-7a797b2aebdb",
       "category": "complexity",
       "severity": "high",
+      "score": 80,
       "file": "utils/youtube_uploader.py",
       "lineno": 386,
       "message": "Function 'interactive_analytics' has high complexity (cc=36).",
-      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser",
       "suggested_fix": "Refactor function to reduce complexity.",
-      "score": 80
+      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser"
     },
     {
       "id": "PY-CPLX-da42ff94c89d",
       "category": "complexity",
       "severity": "high",
+      "score": 80,
       "file": "api/youtube_routes.py",
       "lineno": 42,
       "message": "Function 'upload_to_youtube' has high complexity (cc=13).",
-      "evidence": "def upload_to_youtube():\n    \"\"\"\n    Endpoint to upload a video to YouTube.\n    \n    Expected JSON payload:\n    {\n        \"video_id\": \"job_id_of_processed_video\",\n        \"highlight_index\": 0,  # (opt",
       "suggested_fix": "Refactor function to reduce complexity.",
-      "score": 80
+      "evidence": "def upload_to_youtube():\n    \"\"\"\n    Endpoint to upload a video to YouTube.\n    \n    Expected JSON payload:\n    {\n        \"video_id\": \"job_id_of_processed_video\",\n        \"highlight_index\": 0,  # (opt"
     },
     {
       "id": "PY-CPLX-93a5ea6fba4c",
       "category": "complexity",
       "severity": "high",
+      "score": 80,
       "file": "services/youtube_uploader.py",
       "lineno": 386,
       "message": "Function 'interactive_analytics' has high complexity (cc=36).",
-      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser",
       "suggested_fix": "Refactor function to reduce complexity.",
-      "score": 80
+      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser"
     },
     {
       "id": "JS-TEST-f7be7ce5",
       "category": "testing",
       "severity": "missing",
+      "score": 45,
       "file": "/Users/chinmaychaudhari/Desktop/Recusion/shortGen",
       "lineno": null,
       "message": "No tests detected (no package.json test script or test files).",
-      "evidence": "No tests found",
       "suggested_fix": "Add unit tests and a test script to package.json.",
-      "score": 45
+      "evidence": "No tests found"
     }
   ],
   "files": {
@@ -683,5 +721,13 @@
         "d84ed9ef15bf06835a346c480ae7078b80ea87686378922bd81a956395d15e96"
       ]
     }
-  }
+  },
+  "recommendations": [
+    "Refactor function in `core/video_processor.py` at line 22 to reduce complexity.",
+    "Address security issue in `features/scene_intensity.py:12` - Use of dangerous function 'eval'..",
+    "Refactor function in `utils/process_video_and_score.py` at line 115 to reduce complexity.",
+    "Address security issue in `utils/scene_intensity.py:12` - Use of dangerous function 'eval'..",
+    "Refactor function in `utils/youtube_uploader.py` at line 386 to reduce complexity."
+  ],
+  "markdown": "# Code Quality Report\n\n**Overall Score:** 85/100\n\n## Top Issues\n\n| ID | Severity | Location | Message |\n|----|----------|----------|---------|\n| PY-CPLX-5ed12b5b9a59 | high | core/video_processor.py:22 | Function 'process_video' has high complexity (cc=33). |\n| PY-SEC-2b0791f96540 | high | features/scene_intensity.py:12 | Use of dangerous function 'eval'. |\n| PY-CPLX-b8efa0537e7c | high | utils/process_video_and_score.py:115 | Function 'process_video' has high complexity (cc=33). |\n| PY-SEC-70ee9d6690bf | high | utils/scene_intensity.py:12 | Use of dangerous function 'eval'. |\n| PY-CPLX-7a797b2aebdb | high | utils/youtube_uploader.py:386 | Function 'interactive_analytics' has high complexity (cc=36). |\n\n## Recommendations\n\n- Refactor function in `core/video_processor.py` at line 22 to reduce complexity.\n- Address security issue in `features/scene_intensity.py:12` - Use of dangerous function 'eval'..\n- Refactor function in `utils/process_video_and_score.py` at line 115 to reduce complexity.\n- Address security issue in `utils/scene_intensity.py:12` - Use of dangerous function 'eval'..\n- Refactor function in `utils/youtube_uploader.py` at line 386 to reduce complexity."
 }

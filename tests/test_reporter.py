@@ -58,9 +58,12 @@ def test_generate_report_basic():
     }
 
     report = generate_report(analysis)
+    print(report)
 
     assert isinstance(report["overall_score"], int), "Expected overall_score to be an integer"
     assert "recommendations" in report, "Expected recommendations in report"
     assert isinstance(report["recommendations"], list), "Expected recommendations to be a list"
     assert "markdown" in report, "Expected markdown key in report"
     assert "# Code Quality Report" in report["markdown"], "Expected markdown to contain header"
+test_generate_report_basic()
+test_standardize_issue_defaults()

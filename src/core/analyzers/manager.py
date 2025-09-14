@@ -25,7 +25,7 @@ def analyze_repo(
     path: str,
     languages: List[str] = None,
     index_for_rag: bool = False,
-    use_llm: bool = False
+    use_llm: bool = True
 ) -> Dict[str, Any]:
     """
     Analyze a code repository for quality issues across multiple languages.
