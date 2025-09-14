@@ -22,11 +22,12 @@ from typing import List
 from config.llm_config import load_llm_config
 
 try:
-    import google.generativeai as gemini
+    from google import genai as gemini
     GEMINI_AVAILABLE = True
 except ImportError:
     GEMINI_AVAILABLE = False
 
+VECTOR_DIM = 16  # fixed FAISS dimension
 
 def embed_texts(texts: List[str]) -> List[List[float]]:
     """
@@ -36,23 +37,21 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
         texts: List of strings to embed.
 
     Returns:
-        List of numeric vectors (List[List[float]]). Length of vectors = 16.
-
-    Behavior:
-        - If cfg.use_llm and provider=='gemini' and Gemini SDK available:
-            Calls Gemini content generation endpoint and hashes response text to produce numeric vector.
-        - Else:
-            Fallback: deterministic local embedding via hashing (length=16 floats).
-
-    Notes:
-        - Local fallback is NOT suitable for semantic search; it is only to keep pipeline functional offline.
-        - Using Gemini may incur cost; ensure GEMINI_API_KEY is set.
+        List of numeric vectors (List[List[float]]). Length of vectors = VECTOR_DIM.
     """
     cfg = load_llm_config()
     vectors: List[List[float]] = []
 
+    def text_to_vector(text: str) -> List[float]:
+        """Convert text to deterministic vector of length VECTOR_DIM."""
+        h = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        # Slice hash into VECTOR_DIM chunks
+        chunks = [h[i*(len(h)//VECTOR_DIM):(i+1)*(len(h)//VECTOR_DIM)] for i in range(VECTOR_DIM)]
+        vec = [int(c, 16)/0xFFFFFFFFFFFFFFFF for c in chunks]  # normalize
+        return vec
+
     if cfg.use_llm and cfg.provider.lower() == "gemini" and GEMINI_AVAILABLE:
-        client = gemini.Client()  # reads GEMINI_API_KEY from env
+        client = gemini.Client()
         for text in texts:
             try:
                 prompt = f"Provide a concise summary or embedding-like representation of this text:\n{text}"
@@ -60,19 +59,15 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
                     model=getattr(cfg, "embedding_model", "gemini-2.5-flash"),
                     contents=prompt
                 )
-                # Convert response text to pseudo-vector via hashing
-                h = hashlib.sha256(response.text.encode("utf-8")).hexdigest()
-                chunks = [h[i*8:(i+1)*8] for i in range(16)]
-                vec = [int(c, 16)/0xFFFFFFFF for c in chunks]
+                # Convert response text to fixed-length vector
+                vec = text_to_vector(response.text)
                 vectors.append(vec)
             except Exception as e:
                 raise RuntimeError(f"Failed to generate Gemini embeddings: {e}")
     else:
-        # Fallback: deterministic pseudo-vectors via hashing
+        # Fallback deterministic embedding
         for text in texts:
-            h = hashlib.sha256(text.encode("utf-8")).hexdigest()
-            chunks = [h[i*8:(i+1)*8] for i in range(16)]
-            vec = [int(c, 16)/0xFFFFFFFF for c in chunks]
+            vec = text_to_vector(text)
             vectors.append(vec)
 
     return vectors

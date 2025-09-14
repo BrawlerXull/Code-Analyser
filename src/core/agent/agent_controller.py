@@ -77,6 +77,7 @@ class AgentController:
             Dict with explanation, step-by-step fix, sources, and confidence
         """
         issue = next((i for i in report.get("issues", []) if i.get("id") == issue_id), None)
+        print("issue" , issue)
         if not issue:
             return {"issue_id": issue_id, "explanation": "Issue not found.",
                     "fix_plan": [], "sources": [], "confidence": "low"}
@@ -114,7 +115,9 @@ Respond in JSON: {{"explanation": "...", "fix_plan": ["step 1", "step 2"]}}
         if self.use_llm:
             try:
                 llm_resp = self._call_llm(prompt)
-                parsed = json.loads(llm_resp)
+                
+                parsed = _parse_llm_json(llm_resp)
+                print(parsed)
                 return {
                     "issue_id": issue_id,
                     "explanation": parsed.get("explanation", issue.get("message")),

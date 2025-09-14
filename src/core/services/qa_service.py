@@ -61,9 +61,16 @@ def answer_question(report: Dict[str, Any], question: str) -> Dict[str, Any]:
             agent = AgentController(cfg)  # Gemini API usage internally
             
             # Attempt to map question to issue
-            issue_id_match = re.search(r"(py|js)-\w+-\d+", question, flags=re.I)
+            # Extract full issue ID
+            issue_id_match = re.search(r"(py|js)-\w+-[a-f0-9]+", question, flags=re.I)
             if issue_id_match:
-                issue_id = issue_id_match.group(0).upper()
+                issue_id = issue_id_match.group(0)  # do NOT uppercase, keep original
+                print("Extracted issue_id:", issue_id)  # debug
+            else:
+                issue_id = None
+
+            if issue_id_match:
+                issue_id = issue_id_match.group(0)
                 resp = agent.explain_issue(report, issue_id)
                 
             else:
@@ -137,10 +144,12 @@ def _rule_based_qa(report: Dict[str, Any], question: str) -> Dict[str, Any]:
         return {"answer": "\n".join(answer_lines), "sources": [filename], "confidence": "medium"}
 
     # Case 4: How to fix issue by id
-    id_match = re.search(r"(py|js)-\w+-\d+", q, flags=re.I)
+    id_match = re.search(r"(py|js)-\w+-[a-f0-9]+", q, flags=re.I)
     if "how to fix" in q and id_match:
-        issue_id = id_match.group(0).upper()
-        issue = next((i for i in issues if i.get("id", "").upper() == issue_id), None)
+        issue_id = id_match.group(0)  # keep original case
+        # case-insensitive comparison
+        issue = next((i for i in issues if i.get("id", "").lower() == issue_id.lower()), None)
+
         if not issue:
             return {"answer": f"Issue {issue_id} not found.", "sources": [], "confidence": "low"}
         return {

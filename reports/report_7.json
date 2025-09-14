@@ -1,0 +1,687 @@
+{
+  "meta": {
+    "path": "/Users/chinmaychaudhari/Desktop/Recusion/shortGen",
+    "analyzed_at": "2025-09-14T13:02:10.639160"
+  },
+  "summary": "Security issues: 2 (high: 2, medium: 0), Complexity issues: 5, Duplications: 0, Missing tests: 1",
+  "overall_score": 85,
+  "languages": [
+    "py",
+    "js"
+  ],
+  "issues": [
+    {
+      "id": "PY-CPLX-5ed12b5b9a59",
+      "category": "complexity",
+      "severity": "high",
+      "file": "core/video_processor.py",
+      "lineno": 22,
+      "message": "Function 'process_video' has high complexity (cc=33).",
+      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
+      "suggested_fix": "Refactor function to reduce complexity.",
+      "score": 80
+    },
+    {
+      "id": "PY-SEC-2b0791f96540",
+      "category": "security",
+      "severity": "high",
+      "file": "features/scene_intensity.py",
+      "lineno": 12,
+      "message": "Use of dangerous function 'eval'.",
+      "evidence": "model.eval()",
+      "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
+      "score": 80
+    },
+    {
+      "id": "PY-CPLX-b8efa0537e7c",
+      "category": "complexity",
+      "severity": "high",
+      "file": "utils/process_video_and_score.py",
+      "lineno": 115,
+      "message": "Function 'process_video' has high complexity (cc=33).",
+      "evidence": "def process_video(video_path, jobs, job_id, num_highlights=3, highlight_duration=(20, 30)):\n    \"\"\"Process a video file to generate highlights\"\"\"\n\n# another\n    try:\n        job_folder = os.path.join(",
+      "suggested_fix": "Refactor function to reduce complexity.",
+      "score": 80
+    },
+    {
+      "id": "PY-SEC-70ee9d6690bf",
+      "category": "security",
+      "severity": "high",
+      "file": "utils/scene_intensity.py",
+      "lineno": 12,
+      "message": "Use of dangerous function 'eval'.",
+      "evidence": "model.eval()",
+      "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
+      "score": 80
+    },
+    {
+      "id": "PY-CPLX-7a797b2aebdb",
+      "category": "complexity",
+      "severity": "high",
+      "file": "utils/youtube_uploader.py",
+      "lineno": 386,
+      "message": "Function 'interactive_analytics' has high complexity (cc=36).",
+      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser",
+      "suggested_fix": "Refactor function to reduce complexity.",
+      "score": 80
+    },
+    {
+      "id": "PY-CPLX-da42ff94c89d",
+      "category": "complexity",
+      "severity": "high",
+      "file": "api/youtube_routes.py",
+      "lineno": 42,
+      "message": "Function 'upload_to_youtube' has high complexity (cc=13).",
+      "evidence": "def upload_to_youtube():\n    \"\"\"\n    Endpoint to upload a video to YouTube.\n    \n    Expected JSON payload:\n    {\n        \"video_id\": \"job_id_of_processed_video\",\n        \"highlight_index\": 0,  # (opt",
+      "suggested_fix": "Refactor function to reduce complexity.",
+      "score": 80
+    },
+    {
+      "id": "PY-CPLX-93a5ea6fba4c",
+      "category": "complexity",
+      "severity": "high",
+      "file": "services/youtube_uploader.py",
+      "lineno": 386,
+      "message": "Function 'interactive_analytics' has high complexity (cc=36).",
+      "evidence": "def interactive_analytics():\n    \"\"\"\n    Interactive function to explore your YouTube analytics.\n    \"\"\"\n    # Authenticate and build the service\n    youtube, youtube_analytics = get_authenticated_ser",
+      "suggested_fix": "Refactor function to reduce complexity.",
+      "score": 80
+    },
+    {
+      "id": "JS-TEST-f7be7ce5",
+      "category": "testing",
+      "severity": "missing",
+      "file": "/Users/chinmaychaudhari/Desktop/Recusion/shortGen",
+      "lineno": null,
+      "message": "No tests detected (no package.json test script or test files).",
+      "evidence": "No tests found",
+      "suggested_fix": "Add unit tests and a test script to package.json.",
+      "score": 45
+    }
+  ],
+  "files": {
+    "app.py": {
+      "functions": [
+        {
+          "name": "create_app",
+          "lineno": 23,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 1
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "54d2621ce4af75bffa1aebd9d05b466621e73ca5e700d0eda711446ed1c07321"
+      ]
+    },
+    "core/clipper.py": {
+      "functions": [
+        {
+          "name": "save_highlight_clips",
+          "lineno": 6,
+          "arg_count": 3,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "df5945af2384c00135bd5cebc084b402727715f731fc6d3c371a126c8fa568a3"
+      ]
+    },
+    "core/video_processor.py": {
+      "functions": [
+        {
+          "name": "process_video",
+          "lineno": 22,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 33
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "45141f15a6f7e0e8f378446daaf22670dc164fc18c1c3a544edd7007296bc4ff"
+      ]
+    },
+    "core/scoring.py": {
+      "functions": [
+        {
+          "name": "normalize_scores",
+          "lineno": 1,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "merge_scores",
+          "lineno": 13,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 5
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "30f6b6df0500093011dc3d1e99fe9a52239e448d8aa5642ed42092fffbebda10",
+        "c3590de54d32bb96a0e3eb062dd35bbcaec05bc5611c9a0aedc51b2afd2b64d0"
+      ]
+    },
+    "config/config.py": {
+      "functions": [],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": []
+    },
+    "features/scene_intensity.py": {
+      "functions": [
+        {
+          "name": "analyze_scene_intensity",
+          "lineno": 8,
+          "arg_count": 2,
+          "decorators": [],
+          "cc": 4
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [
+        {
+          "id": "PY-SEC-2b0791f96540",
+          "category": "security",
+          "severity": "high",
+          "file": "features/scene_intensity.py",
+          "lineno": 12,
+          "message": "Use of dangerous function 'eval'.",
+          "evidence": "model.eval()",
+          "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
+          "score": 80
+        }
+      ],
+      "duplication_hashes": [
+        "b319abb963b9e26909d22d7d87ca618207b1537c34b5859995235eef576eb97c"
+      ]
+    },
+    "features/scene_utils.py": {
+      "functions": [
+        {
+          "name": "detect_scenes",
+          "lineno": 9,
+          "arg_count": 2,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "af02c3f3c3172ed94a239e3699656054c96fedbd042bf1b7f7da67cbfdb4a17f"
+      ]
+    },
+    "features/sentiment_analysis.py": {
+      "functions": [
+        {
+          "name": "analyze_sentiment",
+          "lineno": 3,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "c2721da153182abbdf99df37e69450a7ae675193107f86771489b395d8bb3de6"
+      ]
+    },
+    "features/audio_utils.py": {
+      "functions": [
+        {
+          "name": "extract_and_transcribe_audio",
+          "lineno": 7,
+          "arg_count": 3,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "dc743925f29bbce58b19f842e4b4a82e819d64496dc563b584a9ccc01d80aa48"
+      ]
+    },
+    "utils/process_video_and_score.py": {
+      "functions": [
+        {
+          "name": "allowed_file",
+          "lineno": 33,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "merge_scores",
+          "lineno": 36,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "process_video",
+          "lineno": 115,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 33
+        },
+        {
+          "name": "normalize_scores",
+          "lineno": 51,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 6
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "ddadffe98cf031cb128e247d7235c7fac330aa01d9f2a0233ffdea27ff490031",
+        "dbf466fa1a3eabc37900e6fb8daf90e1d4ce697ed276598471dd2059710a70a4",
+        "be9172e18489b08bb2f75bba5de4f6b84f9564c10683847693b45a4218e2b6b0",
+        "0fc37d8d0be18d537d6d6257954003d2d9610f43196862c73a57c59c6cc1fd59"
+      ]
+    },
+    "utils/scene_intensity.py": {
+      "functions": [
+        {
+          "name": "analyze_scene_intensity",
+          "lineno": 8,
+          "arg_count": 2,
+          "decorators": [],
+          "cc": 4
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [
+        {
+          "id": "PY-SEC-70ee9d6690bf",
+          "category": "security",
+          "severity": "high",
+          "file": "utils/scene_intensity.py",
+          "lineno": 12,
+          "message": "Use of dangerous function 'eval'.",
+          "evidence": "model.eval()",
+          "suggested_fix": "Avoid using eval/exec; consider safer alternatives.",
+          "score": 80
+        }
+      ],
+      "duplication_hashes": [
+        "b319abb963b9e26909d22d7d87ca618207b1537c34b5859995235eef576eb97c"
+      ]
+    },
+    "utils/sentiment_analysis.py": {
+      "functions": [
+        {
+          "name": "analyze_sentiment",
+          "lineno": 3,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "c2721da153182abbdf99df37e69450a7ae675193107f86771489b395d8bb3de6"
+      ]
+    },
+    "utils/utils.py": {
+      "functions": [
+        {
+          "name": "allowed_file",
+          "lineno": 4,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "ensure_directories",
+          "lineno": 8,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 1
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "d8f416b1136fa04d87eb4bc607b885028bce3301da35c0826e5683fd6937ad2a",
+        "334606471a4ef1aac064f30802397ca28ee2f53bc288647d92546445e0eff1fc"
+      ]
+    },
+    "utils/youtube_uploader.py": {
+      "functions": [
+        {
+          "name": "authenticate_youtube",
+          "lineno": 21,
+          "arg_count": 3,
+          "decorators": [],
+          "cc": 8
+        },
+        {
+          "name": "upload_video",
+          "lineno": 70,
+          "arg_count": 6,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "get_authenticated_service",
+          "lineno": 151,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 7
+        },
+        {
+          "name": "get_authenticated_channel_id",
+          "lineno": 182,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 4
+        },
+        {
+          "name": "get_all_video_ids",
+          "lineno": 207,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "get_video_analytics",
+          "lineno": 265,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "get_channel_analytics",
+          "lineno": 302,
+          "arg_count": 4,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "convert_analytics_to_dataframe",
+          "lineno": 337,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "analyze_video_performance",
+          "lineno": 352,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "interactive_analytics",
+          "lineno": 386,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 36
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "fc9020273f4f1222cd0168a7ea2a2d7c9e0998a0f7b9055cd89529a9fff2c2b8",
+        "852953f7121b2878133bf96e7306f9a73d434cb3a522d9329dd9cf83830cb20c",
+        "7eb14f4b9d88069884f1a51b4f3cfe5e2cfea1c994e2b2ddf484dc176d6fb2b0",
+        "9e6e4c869ac8a7d788eceb0f0d54b71e8854111816e43fa514568f09e74be790",
+        "599c7aefb44981b0684c304e76cf5ddf00840ce43b7195d175d9da3e41e05052",
+        "29908c346f07bea07b7f6b4d8b76aaaefe2d8f13fa07e796984a59366a10c62c",
+        "fb991a0fdb09f9d17c3639e1e5a69daed89990d98185055b9ae83cc2e71d6aea",
+        "1690791db0ef9b645717933e8660f9b35adda164915082ecbf8e82a8dbcce04d",
+        "f27f5390cfb8947aff8310c3fca6e3bdb55899eaefc452930a04eb051bf9c4e0",
+        "d84ed9ef15bf06835a346c480ae7078b80ea87686378922bd81a956395d15e96"
+      ]
+    },
+    "api/video_routes.py": {
+      "functions": [
+        {
+          "name": "upload_videoo",
+          "lineno": 19,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "get_job_status",
+          "lineno": 63,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "get_job_results",
+          "lineno": 75,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "download_file",
+          "lineno": 107,
+          "arg_count": 2,
+          "decorators": [],
+          "cc": 4
+        },
+        {
+          "name": "get_transcript",
+          "lineno": 123,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 3
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "54d5d5a904e2dd1c65f33551c1c591f911426841500acb5b0779776dd16c395b",
+        "960f2ec3ff9016b319f7702800043d4b8cf98d861490ab6546381bde1c4db662",
+        "f8303d7bcacb4bb5552b3955aa6802e703a191893503993ff504da1ebbe1bc47",
+        "99a381d21238fd2310b983ed37c5f9e44d108701c3c5e219da4bae2fdc7c1f66",
+        "a23aadad671b11e7da082e164ec884d4c2c44e92f23ca4b1221b8ff0441a1699"
+      ]
+    },
+    "api/youtube_routes.py": {
+      "functions": [
+        {
+          "name": "upload_to_youtube",
+          "lineno": 42,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 13
+        },
+        {
+          "name": "authenticate",
+          "lineno": 156,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "get_channel_overview",
+          "lineno": 165,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 3
+        },
+        {
+          "name": "get_video_performance",
+          "lineno": 192,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 4
+        },
+        {
+          "name": "get_all_videos",
+          "lineno": 223,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 2
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "994b9f221365dea2e0d24dd1d67356eb662682043e6674a99b73ccb62e56d90c",
+        "8bef10613d4d70e311bb4dc990ed86ee7f2c32399479ddc740b51cb76b7ab79f",
+        "e6eb334c4d2c4305980af1efecd8a19a27efdb0ee155822f93537d95b68849de",
+        "18bea3291c05e4d94c6676dc7953679f1bba7f29a611518930244af822e76f20",
+        "ecf68892f4ab32ace2a9676b8b57a2c77b3530c84f5c3040053ce80338aec895"
+      ]
+    },
+    "api/health_routes.py": {
+      "functions": [
+        {
+          "name": "cleanup_old_jobs",
+          "lineno": 13,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 7
+        },
+        {
+          "name": "health_check",
+          "lineno": 39,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 1
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "56e2a88195a4eea100538aa72229818841e1e1cd9c81a8aae52e87a3806fd834",
+        "a7b293e937250e67b4c12396b76241fced0f811577c7ae1c2148735385cbfd3d"
+      ]
+    },
+    "jobs/job_manager.py": {
+      "functions": [],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": []
+    },
+    "services/youtube_uploader.py": {
+      "functions": [
+        {
+          "name": "authenticate_youtube",
+          "lineno": 21,
+          "arg_count": 3,
+          "decorators": [],
+          "cc": 8
+        },
+        {
+          "name": "upload_video",
+          "lineno": 70,
+          "arg_count": 6,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "get_authenticated_service",
+          "lineno": 151,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 7
+        },
+        {
+          "name": "get_authenticated_channel_id",
+          "lineno": 182,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 4
+        },
+        {
+          "name": "get_all_video_ids",
+          "lineno": 207,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "get_video_analytics",
+          "lineno": 265,
+          "arg_count": 5,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "get_channel_analytics",
+          "lineno": 302,
+          "arg_count": 4,
+          "decorators": [],
+          "cc": 2
+        },
+        {
+          "name": "convert_analytics_to_dataframe",
+          "lineno": 337,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 5
+        },
+        {
+          "name": "analyze_video_performance",
+          "lineno": 352,
+          "arg_count": 1,
+          "decorators": [],
+          "cc": 6
+        },
+        {
+          "name": "interactive_analytics",
+          "lineno": 386,
+          "arg_count": 0,
+          "decorators": [],
+          "cc": 36
+        }
+      ],
+      "classes": [],
+      "todos": [],
+      "security_warnings": [],
+      "duplication_hashes": [
+        "fc9020273f4f1222cd0168a7ea2a2d7c9e0998a0f7b9055cd89529a9fff2c2b8",
+        "852953f7121b2878133bf96e7306f9a73d434cb3a522d9329dd9cf83830cb20c",
+        "7eb14f4b9d88069884f1a51b4f3cfe5e2cfea1c994e2b2ddf484dc176d6fb2b0",
+        "9e6e4c869ac8a7d788eceb0f0d54b71e8854111816e43fa514568f09e74be790",
+        "599c7aefb44981b0684c304e76cf5ddf00840ce43b7195d175d9da3e41e05052",
+        "29908c346f07bea07b7f6b4d8b76aaaefe2d8f13fa07e796984a59366a10c62c",
+        "fb991a0fdb09f9d17c3639e1e5a69daed89990d98185055b9ae83cc2e71d6aea",
+        "1690791db0ef9b645717933e8660f9b35adda164915082ecbf8e82a8dbcce04d",
+        "f27f5390cfb8947aff8310c3fca6e3bdb55899eaefc452930a04eb051bf9c4e0",
+        "d84ed9ef15bf06835a346c480ae7078b80ea87686378922bd81a956395d15e96"
+      ]
+    }
+  }
+}

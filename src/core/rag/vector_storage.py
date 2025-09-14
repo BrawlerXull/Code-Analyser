@@ -34,17 +34,10 @@ except ImportError:
 
 class VectorStore:
     """
-    Simple vector store with FAISS or disk-backed fallback.
+    Vector store with FAISS (if available) or disk-backed fallback.
     """
 
     def __init__(self, index_path: str = None, use_faiss: bool = True):
-        """
-        Initialize vector store.
-
-        Args:
-            index_path: Path to store/load index.
-            use_faiss: Whether to use FAISS (requires faiss installed).
-        """
         self.cfg = load_llm_config()
         self.index_path = index_path or "./data/faiss.index"
         self.use_faiss = use_faiss and FAISS_AVAILABLE and self.cfg.use_llm
@@ -52,15 +45,20 @@ class VectorStore:
         self.embeddings: List[List[float]] = []
 
         if self.use_faiss:
-            self.dim = 16  # embedding dimension, must match embed_texts output
-            self.index = faiss.IndexFlatL2(self.dim)  # L2 distance
+            self.dim = 16  # must match embed_texts output
+            if os.path.exists(self.index_path):
+                self.index = faiss.read_index(self.index_path)
+                if self.index.d != self.dim:
+                    print(f"[WARNING] FAISS index dimension mismatch. Resetting index.")
+                    self.index = faiss.IndexFlatL2(self.dim)
+            else:
+                self.index = faiss.IndexFlatL2(self.dim)
         else:
             self.index = None
 
     def add_documents(self, docs: List[Dict[str, Any]]) -> None:
         """
         Add documents to the store.
-
         Args:
             docs: List of dicts with keys: 'id', 'text', 'meta'.
         """
@@ -68,32 +66,31 @@ class VectorStore:
         vecs = embed_texts(texts)
         self.documents.extend(docs)
         self.embeddings.extend(vecs)
+
         if self.use_faiss and self.index:
             import numpy as np
             self.index.add(np.array(vecs, dtype="float32"))
 
     def save(self) -> None:
-        """
-        Persist the vector store to disk.
-        """
+        """Persist the vector store to disk."""
         os.makedirs(os.path.dirname(self.index_path), exist_ok=True)
         if self.use_faiss and self.index:
             faiss.write_index(self.index, self.index_path)
             meta_path = self.index_path + ".meta.json"
             with open(meta_path, "w", encoding="utf-8") as f:
                 json.dump(self.documents, f, indent=2)
+                print("saved at 1")
         else:
             # disk fallback
             data = [{"doc": doc, "embedding": emb} for doc, emb in zip(self.documents, self.embeddings)]
             with open(self.index_path, "w", encoding="utf-8") as f:
                 for item in data:
                     f.write(json.dumps(item) + "\n")
+                    print("saved at 2")
 
     def load(self) -> None:
-        """
-        Load vector store from disk.
-        """
-        if self.use_faiss and self.index_path and FAISS_AVAILABLE:
+        """Load vector store from disk."""
+        if self.use_faiss and FAISS_AVAILABLE and os.path.exists(self.index_path):
             self.index = faiss.read_index(self.index_path)
             meta_path = self.index_path + ".meta.json"
             if os.path.exists(meta_path):
@@ -111,18 +108,15 @@ class VectorStore:
     def query(self, query_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """
         Query vector store for most similar documents.
-
         Args:
             query_text: Query string
             top_k: Number of top results to return
-
         Returns:
             List of dicts: { "doc": {...}, "score": float }
         """
-        query_vecs = embed_texts([query_text])
-        query_vec = query_vecs[0]
+        query_vec = embed_texts([query_text])[0]
 
-        if self.use_faiss and self.index:
+        if self.use_faiss and self.index and self.index.ntotal > 0:
             import numpy as np
             D, I = self.index.search(np.array([query_vec], dtype="float32"), top_k)
             results = []
@@ -134,11 +128,10 @@ class VectorStore:
             # Linear scan fallback
             results: List[Tuple[float, Dict[str, Any]]] = []
             for doc, emb in zip(self.documents, self.embeddings):
-                # cosine similarity
-                dot = sum(a*b for a,b in zip(query_vec, emb))
+                dot = sum(a*b for a, b in zip(query_vec, emb))
                 norm_query = math.sqrt(sum(a*a for a in query_vec))
                 norm_emb = math.sqrt(sum(b*b for b in emb))
                 sim = dot / (norm_query * norm_emb + 1e-10)
                 results.append((sim, doc))
             results.sort(key=lambda x: x[0], reverse=True)
-            return [{"doc": d, "score": float(s)} for s,d in results[:top_k]]
+            return [{"doc": d, "score": float(s)} for s, d in results[:top_k]]
